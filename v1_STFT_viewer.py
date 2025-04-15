@@ -1,13 +1,5 @@
-import os
 import numpy as np
 import matplotlib.pyplot as plt
-import tkinter as tk
-from tkinter import filedialog as fd
-from mpl_toolkits.mplot3d import Axes3D
-from os import listdir
-from os.path import isfile, join
-import v6_STFT_analysis as STFT
-import v1_DropShot as TraceHandler
 
 
 class ZxxBackdrop:
@@ -138,61 +130,3 @@ class ZxxBackdrop:
         save_path = "/Users/mmcpartlan/Desktop/"
         plt.savefig(save_path + 'exported_trace_plot.png', bbox_inches='tight', dpi=300.0, pad_inches=0.5,
                     transparent='true')
-
-
-if __name__ == "__main__":
-    SMALL_SIZE = 16
-    MEDIUM_SIZE = 18
-    BIGGER_SIZE = 20
-
-    plt.rc('font', size=SMALL_SIZE)  # controls default text sizes
-    plt.rc('axes', titlesize=SMALL_SIZE)  # fontsize of the axes title
-    plt.rc('axes', labelsize=MEDIUM_SIZE)  # fontsize of the x and y labels
-    plt.rc('xtick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
-    plt.rc('ytick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
-    plt.rc('legend', fontsize=SMALL_SIZE)  # legend fontsize
-    plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
-
-    SPAMM = 2
-    print("ANALYSIS PERFORMED FOR SPAMM INSTRUMENT")
-    print("---------------------------------------")
-    print(str(SPAMM))
-    print("---------------------------------------")
-    drop_threshold = -10
-    before_existence_threshold = 15
-    after_existence_threshold = 15
-
-    win = tk.Tk()
-    win.focus_force()
-    win.withdraw()
-    folder = fd.askdirectory(title="Choose traces folder")
-    print(folder)
-    filelists = STFT.generate_filelist([folder], ".trace")
-    Zxx = STFT.generate_filelist([folder], ".Zxx")
-    file_count = len(filelists[0])
-    analysis_name = folder.rsplit('.', maxsplit=1)[0]
-    new_folder_name = analysis_name.rsplit('/', maxsplit=1)[-1]
-
-    file_counter = 0
-    ZxxFoundation = ZxxBackdrop(filelists[0][0].rsplit('\\', 1)[0], Zxx)
-    for file in filelists[0]:
-        file_counter = file_counter + 1
-        print("Processing file " + str(file_counter) + " of " + str(file_count))
-        newTrace = TraceHandler.Trace(file, SPAMM, drop_threshold=drop_threshold)
-        ZxxFoundation.daughter_traces.append(newTrace)
-
-    trace_counter = 0
-    for trace in ZxxFoundation.daughter_traces:
-        trace_counter += 1
-        print('Trace ' + str(trace_counter) + ': '
-              + str(trace.trace[0]) + ' Hz Start --- '
-              + str(trace.avg_slope)
-              + ' Hz/s Drift' + ' --- Avg Mass: ' + str(trace.avg_mass) + ' Da'
-              + ' --- Avg Charge: ' + str(trace.avg_charge))
-
-    # ZxxFoundation.plot_vertical_timeslices(800, 900, x_start=14300, x_end=14500)
-    ZxxFoundation.plot_vertical_timeslices(50, 75, x_start=13000, x_end=14000)
-    # ZxxFoundation.plot_vertical_timeslices(80, 110, x_start=28600, x_end=29000)
-    # ZxxFoundation.plot_vertical_timeslices(80, 110, x_start=57200, x_end=58000)
-    ZxxFoundation.plot_all_traces_on_Zxx(12750, 14250, plot_trace_overlay=False, include_harmonics=False)
-    # ZxxFoundation.plot_all_traces_on_Zxx(12750, 14000, plot_trace_overlay=False, include_harmonics=False)

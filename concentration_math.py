@@ -105,7 +105,7 @@ def rayleigh_calculator_charge_given(charge, density=1):
 if __name__ == "__main__":
     droplet = initial_molecules_per_drop_tip_size_given(2200, 0.010)
     droplet.print_params()
-    droplet = rayleigh_calculator_diameter_given(40)
+    droplet = rayleigh_calculator_diameter_given(4000)
     droplet.print_params()
     droplet = rayleigh_calculator_charge_given(38)
     droplet.print_params()
